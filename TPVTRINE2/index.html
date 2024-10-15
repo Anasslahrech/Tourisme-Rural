@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Portfolio de Tourisme Rural</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .navbar {
+            background-color: #000;
+        }
+        .navbar a {
+            color: #fff;
+        }
+        .portfolio-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .destination-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"> Tourisme Rural</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="#Villes">Villes</a></li>
+                <li class="nav-item"><a class="nav-link" href="#destinations">Destinations</a></li>
+                <li class="nav-item"><a class="nav-link" href="#a-propos">À Propos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1> Tourisme Rural</h1>
+
+    <section id="Villes">
+        <h2>Villes</h2>
+        <div class="portfolio-item">
+            <h5>Ville 1: Découverte des villages berbères</h5>
+            <p>Description de ce projet qui met en avant la culture et les traditions des villages berbères.</p>
+            <img src="https://via.placeholder.com/300" class="img-fluid" alt="Village Berbère">
+        </div>
+        <div class="portfolio-item">
+            <h5>Ville 2: Randonnées dans le Haut Atlas</h5>
+            <p>Description de ce projet sur les randonnées et la beauté naturelle du Haut Atlas.</p>
+            <img src="https://via.placeholder.com/300" class="img-fluid" alt="Haut Atlas">
+        </div>
+        <div class="portfolio-item">
+            <h5>Ville 3: Gastronomie locale</h5>
+            <p>Description de ce projet sur les spécialités culinaires des différentes régions du Maroc.</p>
+            <img src="https://via.placeholder.com/300" class="img-fluid" alt="Gastronomie Marocaine">
+        </div>
+    </section>
+
+    <section id="destinations" class="mt-5">
+        <h2>Destinations</h2>
+        <div id="destination-list" class="row"></div>
+
+        <h3>Ajouter ou Modifier une Destination</h3>
+        <form id="destination-form">
+            <div class="mb-3">
+                <label for="ville_depart" class="form-label">Ville de Départ</label>
+                <input type="text" class="form-control" id="ville_depart" required>
+            </div>
+            <div class="mb-3">
+                <label for="ville_arrivee" class="form-label">Ville d'Arrivée</label>
+                <input type="text" class="form-control" id="ville_arrivee" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter Destination</button>
+            <button type="button" id="cancel-button" class="btn btn-secondary" style="display:none;">Annuler</button>
+        </form>
+    </section>
+
+    <section id="a-propos" class="mt-5">
+        <h2>À Propos</h2>
+        <p>Une brève description de qui je suis et de ce que je fais.</p>
+    </section>
+
+    <section id="contact" class="mt-5">
+        <h2>Contact</h2>
+        <form>
+            <div class="mb-3">
+                <label for="name" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Données fictives pour les destinations
+    let destinations = [
+        { ville_depart: "Casablanca", ville_arrivee: "Marrakech", image: "https://via.placeholder.com/300" },
+        { ville_depart: "Fès", ville_arrivee: "Chefchaouen", image: "https://via.placeholder.com/300" },
+        { ville_depart: "Agadir", ville_arrivee: "Essaouira", image: "https://via.placeholder.com/300" },
+    ];
+
+    let currentEditIndex = -1; // Index de la destination en cours de modification
+
+    // Fonction pour afficher les destinations
+    function afficherDestinations() {
+        const destinationList = document.getElementById('destination-list');
+        destinationList.innerHTML = ''; // Réinitialiser la liste
+
+        destinations.forEach((dest, index) => {
+            const col = document.createElement('div');
+            col.className = 'col-md-4';
+            col.innerHTML = `
+                <div class="portfolio-item">
+                    <img src="${dest.image}" class="destination-image" alt="${dest.ville_depart} → ${dest.ville_arrivee}">
+                    <h5>${dest.ville_depart} → ${dest.ville_arrivee}</h5>
+                    <button class="btn btn-warning btn-sm" onclick="editDestination(${index})">Modifier</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteDestination(${index})">Supprimer</button>
+                </div>
+            `;
+            destinationList.appendChild(col);
+        });
+    }
+
+    // Fonction pour ajouter ou modifier une destination
+    document.getElementById('destination-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêcher le rechargement de la page
+
+        const ville_depart = document.getElementById('ville_depart').value;
+        const ville_arrivee = document.getElementById('ville_arrivee').value;
+
+        // Vérifier que la destination n'est pas la même que la ville de départ
+        if (ville_depart === ville_arrivee) {
+            alert("La ville de départ et la ville de destination ne peuvent pas être les mêmes.");
+            return;
+        }
+
+        if (currentEditIndex === -1) {
+            // Ajouter une nouvelle destination
+            let destination = { ville_depart: ville_depart, ville_arrivee: ville_arrivee, image: "https://via.placeholder.com/300" };
+            destinations.push(destination);
+        } else {
+            // Modifier une destination existante
+            destinations[currentEditIndex] = { ville_depart, ville_arrivee, image: "https://via.placeholder.com/300" };
+            currentEditIndex = -1; // Réinitialiser l'index après modification
+        }
+
+        // Réinitialiser le formulaire
+        this.reset();
+        document.getElementById('cancel-button').style.display = 'none'; // Masquer le bouton Annuler
+        afficherDestinations(); // Mettre à jour l'affichage des destinations
+    });
+
+    // Fonction pour éditer une destination
+    function editDestination(index) {
+        currentEditIndex = index; // Enregistrer l'index de la destination à modifier
+        const dest = destinations[index];
+        document.getElementById('ville_depart').value = dest.ville_depart;
+        document.getElementById('ville_arrivee').value = dest.ville_arrivee;
+        document.getElementById('cancel-button').style.display = 'inline'; // Afficher le bouton Annuler
+    }
+
+    // Fonction pour annuler l'édition
+    document.getElementById('cancel-button').addEventListener('click', function() {
+        currentEditIndex = -1; // Réinitialiser l'index
+        this.style.display = 'none'; // Masquer le bouton Annuler
+        document.getElementById('destination-form').reset(); // Réinitialiser le formulaire
+    });
+
+    // Fonction pour supprimer une destination
+    function deleteDestination(index) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cette destination ?")) {
+            destinations.splice(index, 1); // Supprimer la destination
+            afficherDestinations(); // Mettre à jour l'affichage
+        }
+    }
+
+    // Initialiser l'affichage des destinations
+    afficherDestinations();
+</script>
+</body>
+</html>
